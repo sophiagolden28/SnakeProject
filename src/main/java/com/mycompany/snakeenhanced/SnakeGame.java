@@ -13,10 +13,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.*;
-import java.io.*;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
@@ -80,24 +76,14 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        try {
-            draw(g);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(SnakeGame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(SnakeGame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        draw(g);
     }
 
-    public void draw(Graphics g) throws FileNotFoundException, IOException {
-
-        File file = new File("highscore.txt");
-        Scanner sc = new Scanner(file);
-        int highScore = sc.nextInt();
-        
-        //SCORE AND HIGH SCORE TRACKERS ADDED 
+    public void draw(Graphics g) {
+        //SCORE AND HIGH SCORE TRACKERS ADDED
         int score = snakeBody.size();
-        
+        int highScore = 0;
+
         //Grid Lines
         for (int i = 0; i < boardWidth / tileSize; i++) {
             //(x1, y1, x2, y2)
@@ -157,13 +143,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
         //game restart message
         if (gameOver) {
-
-            FileWriter fw = new FileWriter("highscore.txt");
-            PrintWriter pw = new PrintWriter(fw);
-            pw.print(String.valueOf(snakeBody.size()));
-            pw.close();
-
-            g.drawString("High Score: " + highScore, tileSize - 16, tileSize);
 
             g.setFont(new Font("Arial", Font.BOLD, 18));
             g.drawString("Press Space to play again", 175, tileSize + 470);
@@ -248,7 +227,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
         }
 
         //if the game's over and if they press space
-        if (e.getKeyCode() == KeyEvent.VK_SPACE && velocityX != -1) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 
             //restart everything
             if (gameOver) {
@@ -265,8 +244,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
                 velocityX = 1;
                 velocityY = 0;
 
-                //game timer
-                gameLoop = new Timer(100, this); //how long it takes to start timer, milliseconds gone between frames 
                 gameLoop.start();
 
             }
