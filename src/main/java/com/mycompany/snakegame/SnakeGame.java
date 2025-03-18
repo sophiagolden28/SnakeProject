@@ -259,7 +259,9 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 
             //restart everything
             if (gameOver) {
-                highScore = snakeBody.size();
+                if(highScore < snakeBody.size()){
+                    highScore = snakeBody.size();
+                }
                 gameOver = false;
 
                 snakeHead = new Tile(5, 5);
